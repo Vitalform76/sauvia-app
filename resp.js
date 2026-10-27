@@ -157,6 +157,37 @@
     return box;
   }
 
+
+  // ---------- compléments (poste, cause, témoins) ----------
+  function witnessLines(w) {
+    if (!w) return '';
+    if (typeof w === 'string') return w;
+    if (Array.isArray(w)) return w.map(function (x) { return typeof x === 'string' ? x : (x && (x.name || x.nom)) || ''; }).filter(Boolean).join('\n');
+    return '';
+  }
+  function completeBlock(a) {
+    var job = h('input', { id: 'cjob', type: 'text', class: 'sm', maxlength: 150, placeholder: 'Ex. opérateur de production', value: a.victim_job || '' });
+    var cause = h('input', { id: 'ccause', type: 'text', class: 'sm', maxlength: 300, placeholder: 'Ex. cutter, sol glissant, chute de hauteur', value: a.agent_cause || '' });
+    var wit = h('textarea', { id: 'cwit', rows: 3, maxlength: 600, placeholder: 'Un témoin par ligne (nom, prénom)' });
+    wit.value = witnessLines(a.witnesses);
+    var out = h('p', { class: 'small', role: 'status' });
+    var btn = h('button', { type: 'button', class: 'ghost', text: 'Enregistrer les compléments', onclick: function () {
+      btn.disabled = true; out.textContent = '';
+      var lines = wit.value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 10);
+      api('/rest/v1/accidents?id=eq.' + a.id, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' }, body: { victim_job: job.value.trim() || null, agent_cause: cause.value.trim() || null, witnesses: lines } })
+        .then(function (rows) {
+          btn.disabled = false;
+          if (!rows || !rows.length) { out.textContent = 'Enregistrement refusé.'; return; }
+          R.detail = Object.assign(R.detail, rows[0]); out.textContent = 'Compléments enregistrés (modification tracée).';
+        }).catch(function (e) { btn.disabled = false; out.textContent = 'Enregistrement impossible : ' + e.message; });
+    } });
+    return h('div', { class: 'sect' }, h('h2', { text: 'Compléter la fiche' }),
+      h('p', { class: 'small', text: 'Informations propres au registre. La fiche de soins du SST n\'est pas modifiée ; chaque modification est tracée.' }),
+      h('div', { class: 'field' }, h('label', { for: 'cjob', text: 'Poste ou fonction de la victime' }), job),
+      h('div', { class: 'field' }, h('label', { for: 'ccause', text: 'Cause ou élément matériel en cause' }), cause),
+      h('div', { class: 'field' }, h('label', { for: 'cwit', text: 'Témoin(s)' }), wit), btn, out);
+  }
+
   // ---------- qualification ----------
   function qualifyBlock(a) {
     var interim = a.worker_status === 'interimaire';
@@ -186,6 +217,7 @@
     } });
     return h('div', { class: 'sect' }, h('h2', { text: 'Qualification' }),
       interim ? h('p', { class: 'small', text: 'Intérimaire : pas d\'inscription au registre, déclaration d\'accident du travail requise.' }) : null,
+      (!interim && a.severity && a.severity !== 'benin') ? h('p', { class: 'alertline', text: 'Le SST a indiqué une gravité « ' + (C.SEV[a.severity] || a.severity) + ' » : une déclaration d\'accident du travail (DAT) est recommandée.' }) : null,
       h('label', { class: 'check', for: 'qmed' }, med, h('span', { text: 'Soins médicaux nécessaires (médecin, hôpital)' })),
       h('label', { class: 'check', for: 'qstop' }, stop, h('span', { text: 'Arrêt de travail' })),
       choice, h('div', { class: 'field' }, reason), out, btn);
@@ -216,7 +248,7 @@
       sec.appendChild(h('div', { class: 'sect' }, h('h2', { text: 'Signatures' }), sg, a.victim_signature_absent_reason ? h('p', { class: 'small', text: 'Victime non signataire : ' + a.victim_signature_absent_reason }) : null));
     }
     if (a.register_number) sec.appendChild(h('p', { class: 'locked', text: 'Inscrit au registre sous le n° ' + a.register_number + '. Ligne verrouillée.' }));
-    if (a.status === 'a_qualifier') sec.appendChild(qualifyBlock(a));
+    if (a.status === 'a_qualifier') { sec.appendChild(completeBlock(a)); sec.appendChild(qualifyBlock(a)); }
     if (a.status === 'dat_a_envoyer' || a.dat_sent_at) sec.appendChild(datBlock(a));
     if (a.status === 'clos' && !a.dat_sent_at && a.qualification_reason) sec.appendChild(h('p', { class: 'locked', text: 'Clos. Motif : ' + a.qualification_reason }));
     if (a.status === 'a_prendre_en_charge' || a.status === 'en_attente_visa') sec.appendChild(h('p', { class: 'small', text: 'Cette fiche est encore en cours de prise en charge par un SST. Vous pourrez la qualifier après son visa.' }));

@@ -491,7 +491,8 @@
   }
   if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', function (ev) { if (ev.data && ev.data.type === 'alert') pollAlerts(); });
 
-  window.SauviaCore = { h: h, api: api, S: S, fmt: fmt, render: render, logout: logout, STATUS: STATUS, SEV: SEV, alertSettings: alertSettings, guideBySlug: guideBySlug };
+  window.SauviaCore = { h: h, api: api, S: S, fmt: fmt, render: render, logout: logout, STATUS: STATUS, SEV: SEV, alertSettings: alertSettings, guideBySlug: guideBySlug, loadList: loadList, openAccident: openAccident, toast: toast };
+
   // ---------- démarrage ----------
   var poll = null;
   function startPolling() {
