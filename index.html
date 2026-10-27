@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3A5F">
+<title>Sauvia – Signaler un accident</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true">+</span><span><strong>Sauvia</strong><small>by Vitalform76</small></span></div>
+  <span id="siteName" class="site"></span>
+</header>
+
+<div id="offline" class="banner warn" role="status" hidden>Hors connexion : la fiche sera envoyée automatiquement au retour du réseau.</div>
+<div id="pending" class="banner info" role="status" hidden></div>
+
+<main>
+  <!-- Pas de QR -->
+  <section id="s-noqr" hidden>
+    <h1>Signaler un accident</h1>
+    <p class="lead">Scannez le QR code affiché sur votre site pour ouvrir le formulaire.</p>
+    <p class="note">Si le QR code est illisible, demandez le lien à votre responsable ou à un sauveteur secouriste du travail.</p>
+  </section>
+
+  <!-- PIN -->
+  <section id="s-pin" hidden>
+    <h1>Signaler un accident</h1>
+    <p class="lead">Saisissez le code PIN de votre site.</p>
+    <form id="pinForm" novalidate>
+      <label for="pin">Code PIN</label>
+      <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="off" pattern="[0-9]*" maxlength="8" required>
+      <p id="pinMsg" class="error" role="alert" hidden></p>
+      <button type="submit" class="primary" id="pinBtn">Continuer</button>
+    </form>
+    <p class="note"><a href="sst.html">Espace SST et responsables</a></p>
+    <p class="note">Ce formulaire ne remplace pas l'appel aux secours ni l'alerte d'un sauveteur secouriste du travail.</p>
+  </section>
+
+  <!-- Formulaire -->
+  <section id="s-form" hidden>
+    <h1>Signaler un accident</h1>
+    <form id="form" novalidate>
+      <div class="field">
+        <label for="nom">Qui est blessé ?</label>
+        <input id="nom" name="nom" type="text" autocomplete="off" placeholder="Nom et prénom" maxlength="150" required>
+      </div>
+
+      <fieldset class="field">
+        <legend>Statut de la personne</legend>
+        <div class="seg">
+          <input type="radio" name="statut" id="st-sal" value="salarie" checked><label for="st-sal">Salarié</label>
+          <input type="radio" name="statut" id="st-int" value="interimaire"><label for="st-int">Intérimaire</label>
+        </div>
+        <p id="interimNote" class="hint" hidden>Un intérimaire ne s'inscrit pas au registre : le responsable fera une déclaration d'accident du travail.</p>
+      </fieldset>
+
+      <div class="field">
+        <label for="zone">Où ?</label>
+        <select id="zone" name="zone"></select>
+      </div>
+      <div class="field">
+        <label for="lieu">Précision sur le lieu <span class="opt">(facultatif)</span></label>
+        <input id="lieu" name="lieu" type="text" maxlength="300" placeholder="Ex. près de la machine 3">
+      </div>
+
+      <div class="field">
+        <label for="quand">Quand ?</label>
+        <input id="quand" name="quand" type="datetime-local" required>
+      </div>
+
+      <div class="field">
+        <label for="quoi">Que s'est-il passé ?</label>
+        <textarea id="quoi" name="quoi" rows="4" maxlength="2000" placeholder="Décrivez en quelques mots" required></textarea>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Photos <span class="opt">(facultatif, 3 maximum)</span></span>
+        <div id="thumbs" class="thumbs"></div>
+        <label for="photo" class="ghost" id="photoBtn">Ajouter une photo</label>
+        <input id="photo" type="file" accept="image/*" hidden>
+        <label class="check" id="consentRow" hidden><input type="checkbox" id="consent"> <span>La personne blessée est d'accord pour que ces photos soient jointes à la fiche.</span></label>
+      </div>
+
+      <p id="formMsg" class="error" role="alert" hidden></p>
+      <button type="submit" class="primary" id="sendBtn">Envoyer le signalement</button>
+    </form>
+  </section>
+
+  <!-- PIN refusé (fiche en attente) -->
+  <section id="s-repin" hidden>
+    <h1>Code PIN à confirmer</h1>
+    <p class="lead">Une fiche en attente n'a pas pu être envoyée : le code PIN a été refusé. Saisissez-le de nouveau.</p>
+    <form id="repinForm" novalidate>
+      <label for="repin">Code PIN</label>
+      <input id="repin" type="password" inputmode="numeric" autocomplete="off" pattern="[0-9]*" maxlength="8">
+      <p id="repinMsg" class="error" role="alert" hidden></p>
+      <button type="submit" class="primary">Renvoyer la fiche</button>
+    </form>
+  </section>
+
+  <!-- Confirmation -->
+  <section id="s-done" hidden>
+    <div class="ok" aria-hidden="true">✓</div>
+    <h1 id="doneTitle">Signalement envoyé</h1>
+    <p class="lead" id="doneText">Un sauveteur secouriste du travail va prendre en charge la personne.</p>
+    <p class="note strong">Si la situation est grave, appelez les secours et prévenez un SST sans attendre.</p>
+    <p id="trackBox" class="track" hidden>Numéro de suivi : <code id="trackCode"></code><br><button type="button" id="trackBtn" class="ghost small">Voir l'état de la fiche</button> <span id="trackState"></span></p>
+    <button type="button" class="primary" id="againBtn">Nouveau signalement</button>
+  </section>
+</main>
+
+<a class="urgence" href="tel:112">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+  Urgence : appeler le 15 · 18 · 112
+</a>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

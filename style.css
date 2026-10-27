@@ -1,0 +1,48 @@
+:root{--navy:#1F3A5F;--red:#C8102E;--bg:#F4F6F9;--ink:#1A2330;--muted:#566170;--line:#8A97A8;--warnbg:#FFF4E0;--warn:#6B4200;--infobg:#E6EEF9;--info:#153A73}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.45;padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+[hidden]{display:none!important}
+.top{background:var(--navy);color:#fff;padding:12px 20px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand span:last-child{display:flex;flex-direction:column;line-height:1.1}
+.brand small{font-size:11px;opacity:.9}
+.logo{width:28px;height:28px;border:2px solid #fff;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:20px;line-height:1}
+.site{font-size:13px;opacity:.95;text-align:right}
+.banner{padding:10px 20px;font-size:13px;line-height:1.35}
+.banner.warn{background:var(--warnbg);color:var(--warn)}
+.banner.info{background:var(--infobg);color:var(--info)}
+main{max-width:520px;margin:0 auto;padding:20px 20px 24px}
+h1{font-size:22px;color:var(--navy);margin:0 0 8px}
+.lead{margin:0 0 16px}
+.note{font-size:13px;color:var(--muted);margin-top:16px}
+.note.strong{color:var(--ink);font-weight:600}
+.field{display:flex;flex-direction:column;gap:6px;margin:0 0 16px;border:0;padding:0;min-width:0}
+label,legend,.lbl{font-size:15px;font-weight:600;padding:0}
+.opt{font-weight:400;color:var(--muted);font-size:13px}
+input[type=text],input[type=password],input[type=datetime-local],select,textarea{width:100%;min-height:52px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+textarea{padding:12px 14px;resize:vertical}
+input[type=password]{letter-spacing:.3em;font-size:22px;text-align:center}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{min-height:52px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;font-weight:500;cursor:pointer}
+.seg input:checked+label{background:var(--navy);border:2px solid var(--navy);color:#fff;font-weight:600}
+.seg input:focus-visible+label{outline:3px solid var(--navy);outline-offset:2px}
+.hint{font-size:13px;color:var(--warn);background:var(--warnbg);border-radius:8px;padding:8px 10px;margin:4px 0 0}
+.primary{width:100%;min-height:56px;border:0;border-radius:12px;background:var(--navy);color:#fff;font:inherit;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px}
+.primary:disabled{opacity:.6}
+.ghost{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;border:2px solid var(--navy);border-radius:10px;background:#fff;color:var(--navy);font-weight:600;cursor:pointer;font-size:15px}
+.ghost.small{min-height:40px;margin-top:6px}
+.error{color:#7A1020;background:#FDE8EB;border-radius:8px;padding:8px 10px;font-size:14px;margin:8px 0 0}
+.thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.thumbs .t{position:relative;width:84px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs button{position:absolute;top:2px;right:2px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;margin-top:8px}
+.check input{width:22px;height:22px;flex:none;margin-top:1px}
+.ok{width:64px;height:64px;border-radius:50%;background:#EAF6EF;color:#0F4D2A;display:grid;place-items:center;font-size:34px;margin:8px 0 12px}
+.track{background:#fff;border:1px solid #D5DCE6;border-radius:12px;padding:12px;font-size:14px}
+.track code{font-size:12px;word-break:break-all}
+.urgence{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding-bottom:env(safe-area-inset-bottom);background:var(--red);color:#fff;text-decoration:none;font-weight:700;font-size:16px;z-index:10}
+@media (prefers-reduced-motion:no-preference){.primary,.ghost{transition:opacity .15s}}
