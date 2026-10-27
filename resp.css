@@ -1,0 +1,19 @@
+.choices{display:grid;gap:10px;margin:12px 0}
+.choice{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:2px solid transparent;border-radius:12px;padding:12px;cursor:pointer;font-weight:400}
+.choice:has(input:checked){border-color:var(--navy);background:#fff}
+.choice input{width:24px;height:24px;flex:none;margin-top:2px}
+.choice strong{display:block;font-size:16px}.choice small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.datrow{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;border-top:1px solid #E3E8EF;padding:10px 0}
+.datlbl{display:block;font-size:13px;color:var(--muted)}.datval{display:block;font-size:16px;word-break:break-word}
+.sects{display:flex;gap:12px;flex-wrap:wrap}.sects figure{margin:0}.sects img{width:150px;height:70px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:8px}.sects figcaption{font-size:13px;color:var(--muted)}
+.regscroll{overflow-x:auto}
+.regtable{border-collapse:collapse;font-size:13px;min-width:900px;width:100%;background:#fff}
+.regtable th,.regtable td{border:1px solid #C9D2DE;padding:6px 8px;text-align:left;vertical-align:top}
+.regtable th{background:#EEF2F7}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  body *{visibility:hidden}
+  #regprint,#regprint *{visibility:visible}
+  #regprint{position:absolute;left:0;top:0;width:100%}
+  .regscroll{overflow:visible}.regtable{min-width:0;font-size:10px}
+}

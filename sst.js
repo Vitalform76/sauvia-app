@@ -172,6 +172,7 @@
     app.textContent = '';
     window.scrollTo(0, 0);
     if (!S.session || !S.profile) return app.appendChild(viewLogin());
+    if (S.profile.role === 'responsable' && window.SauviaResp) return app.appendChild(window.SauviaResp.view());
     app.appendChild(S.view === 'detail' ? viewDetail() : viewList());
   }
 
@@ -490,6 +491,7 @@
   }
   if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', function (ev) { if (ev.data && ev.data.type === 'alert') pollAlerts(); });
 
+  window.SauviaCore = { h: h, api: api, S: S, fmt: fmt, render: render, logout: logout, STATUS: STATUS, SEV: SEV, alertSettings: alertSettings, guideBySlug: guideBySlug };
   // ---------- démarrage ----------
   var poll = null;
   function startPolling() {
